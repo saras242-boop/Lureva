@@ -32,7 +32,7 @@ const saveCart=()=>{localStorage.setItem("cart",JSON.stringify(state.cart));$("#
 async function login(){const pr=new GoogleAuthProvider();
   try{await signInWithPopup(auth,pr)}catch(e){
     if(["auth/popup-blocked","auth/operation-not-supported-in-this-environment"].includes(e.code))return signInWithRedirect(auth,pr);
-    if(e.code!=="auth/popup-closed-by-user")toast("تعذّر تسجيل الدخول، حاولي مجددًا")}}
+    if(e.code!=="auth/popup-closed-by-user"){const M={"auth/unauthorized-domain":"الدومين غير مضاف في Authorized domains","auth/operation-not-allowed":"فعّلي Google في Authentication > Sign-in method","auth/configuration-not-found":"فعّلي Authentication من Firebase Console","auth/network-request-failed":"مشكلة بالاتصال"};console.error(e);toast((M[e.code]||"تعذّر تسجيل الدخول")+" ("+(e.code||"")+")")}}}
 getRedirectResult(auth).catch(()=>toast("تعذّر إكمال تسجيل الدخول"));
 onAuthStateChanged(auth,u=>{state.user=u;$("#acct").title=u?u.displayName||"حسابي":"تسجيل الدخول"});
 $("#acct").onclick=()=>state.user?(confirm("تسجيل الخروج؟")&&signOut(auth).then(()=>toast("تم تسجيل الخروج"))):login();
