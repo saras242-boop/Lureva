@@ -14,7 +14,7 @@ const firebaseConfig = {
   measurementId: "G-E6WXR6794T"
 };
 
-const ADMIN_UID="PASTE_ADMIN_UID"; // UID حساب المديرة من Authentication (غير سري، والحماية الفعلية في القواعد)
+const ADMIN_UID="CE32RG9aCNOU1e49xj0Cwpi1AXE3"; // UID حساب المديرة من Authentication (غير سري، والحماية الفعلية في القواعد)
 
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),st=getStorage(app);
 const $=s=>document.querySelector(s);
@@ -139,14 +139,14 @@ async function refresh(){refresh2();
 function fill(id){editing=id;const p=products[id],f=$("#f");for(const k of["name","cat","price","oldPrice","stock","tag","desc"])f[k].value=p[k]??"";f.sizes.value=(p.sizes||[]).join("،");f.colors.value=(p.colors||[]).join("،");f.published.checked=!!p.published;f.featured.checked=!!p.featured;scrollTo(0,0)}
 $("#rs").onclick=()=>{editing=null;$("#prev").replaceChildren()};
 $("#f").elements.files.onchange=e=>$("#prev").replaceChildren(...[...e.target.files].map(f=>h("img",{src:URL.createObjectURL(f),alt:""})));
-const webp=(file,max=1400)=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(b=>b?res(b):rej(),"image/webp",.82)};i.onerror=rej;i.src=URL.createObjectURL(file)});
+const webp=(file,max=1400,q=.82)=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(b=>b?res(b):rej(),"image/webp",q)};i.onerror=rej;i.src=URL.createObjectURL(file)});
 $("#f").onsubmit=async e=>{e.preventDefault();const f=e.target,err=$("#fe"),btn=$("#sb");err.textContent="";
   const list=s=>s.split(/[,،]/).map(x=>x.trim()).filter(Boolean),price=+f.price.value,old=+f.oldPrice.value||0;
   if(f.name.value.trim().length<2)return err.textContent="اكتبي اسم المنتج.";if(!(price>=0))return err.textContent="السعر غير صحيح.";if(old&&old<=price)return err.textContent="السعر السابق يجب أن يكون أعلى من السعر الحالي.";
   btn.disabled=true;
   try{const id=editing||crypto.randomUUID().slice(0,12),prev=products[id]||{};let images=prev.images||[];
     const files=[...f.files.files];if(files.some(x=>!x.type.startsWith("image/")))throw new Error("ملف غير مدعوم");
-    if(files.length){images=[];for(const [n,x] of files.entries()){const b=await webp(x);const r=sref(st,`products/${id}/${Date.now()}_${n}.webp`);await uploadBytes(r,b,{contentType:"image/webp"});images.push(await getDownloadURL(r))}}
+    if(files.length){images=[];for(const x of files.slice(0,4))images.push(await saveImg(x,800))}
     const data={name:f.name.value.trim(),desc:f.desc.value.trim(),cat:f.cat.value,price,oldPrice:old||null,stock:+f.stock.value|0,tag:f.tag.value.trim()||null,sizes:list(f.sizes.value),colors:list(f.colors.value),images,published:f.published.checked,featured:f.featured.checked,createdAt:prev.createdAt||Date.now(),updatedAt:Date.now()};
     await set(ref(db,"products/"+id),data);toast("تم الحفظ ✓");f.reset();$("#prev").replaceChildren();editing=null;refresh()}
   catch(x){err.textContent="تعذّر الحفظ: تحققي من الصلاحيات والاتصال."}finally{btn.disabled=false}};
@@ -163,6 +163,16 @@ async function refresh2(){
     h("button",{className:"btn ghost",onclick:async()=>{if(confirm("حذف العرض؟")){await remove(ref(db,"banners/"+k));refresh()}}},"حذف"))))}
 $("#cf").onsubmit=async e=>{e.preventDefault();const n=e.target.name.value.trim();if(n.length<2)return;await set(ref(db,"categories/c"+Date.now().toString(36)),{name:n});e.target.reset();toast("أُضيف التصنيف");refresh()};
 $("#bf").onsubmit=async e=>{e.preventDefault();const f=e.target,er=$("#be");er.textContent="";
-  try{const x=f.img.files[0];if(!x?.type.startsWith("image/"))throw 0;const id="b"+Date.now().toString(36),r=sref(st,`products/banners/${id}.webp`);await uploadBytes(r,await webp(x,1800),{contentType:"image/webp"});
-    await set(ref(db,"banners/"+id),{title:f.title.value.trim(),text:f.text.value.trim(),link:f.link.value.trim(),btn:f.btn.value.trim(),place:f.place.value,endsAt:f.end.value?new Date(f.end.value).getTime()+864e5:null,image:await getDownloadURL(r),active:true,createdAt:Date.now()});
+  try{const x=f.img.files[0];if(!x?.type.startsWith("image/"))throw 0;const id="b"+Date.now().toString(36);
+    await set(ref(db,"banners/"+id),{title:f.title.value.trim(),text:f.text.value.trim(),link:f.link.value.trim(),btn:f.btn.value.trim(),place:f.place.value,endsAt:f.end.value?new Date(f.end.value).getTime()+864e5:null,image:await saveImg(x,1100),active:true,createdAt:Date.now()});
     f.reset();toast("تمت الإضافة ✓");refresh()}catch{er.textContent="تعذّر الحفظ: اختاري صورة وتحققي من الصلاحيات."}};
+
+// ===== الصور بدون Firebase Storage =====
+// الوضع الافتراضي: تُضغط الصورة WebP وتُحفظ داخل Realtime Database (مجاني).
+// اختياري وأسرع: Cloudinary مجاني بدون بطاقة. املئي الاسم و unsigned upload preset.
+const CLOUD={name:"",preset:""};
+const readURL=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+async function saveImg(file,max){
+  if(CLOUD.name&&CLOUD.preset){const fd=new FormData();fd.append("file",await webp(file,Math.round(max*1.4)));fd.append("upload_preset",CLOUD.preset);
+    const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD.name}/image/upload`,{method:"POST",body:fd});if(!r.ok)throw new Error("upload");return (await r.json()).secure_url}
+  const u=await readURL(await webp(file,max,.65));if(u.length>190000)throw new Error("image too large");return u}
