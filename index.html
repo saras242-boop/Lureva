@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>متجر الأناقة | ملابس نسائية ومنتجات مختارة</title>
+<meta name="description" content="متجر عربي للملابس النسائية ومنتجات مختارة بعناية مع توصيل لباب البيت.">
+<meta property="og:title" content="متجر الأناقة"><meta property="og:type" content="website"><meta property="og:description" content="ملابس نسائية ومنتجات مختارة بعناية مع توصيل لباب البيت."><meta property="og:locale" content="ar_AR"><meta name="theme-color" content="#7a1f3d">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%237a1f3d%22/><text x=%2216%22 y=%2224%22 font-size=%2222%22 text-anchor=%22middle%22 fill=%22%23fff%22>أ</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">توصيل لباب البيت · الدفع عند الاستلام</div>
+<header class="hdr">
+  <a class="logo" href="#"><span>أ</span> الأناقة</a>
+  <nav><a href="#shop" data-cat="women">الملابس النسائية</a><a href="#shop" data-cat="other">منتجات أخرى</a><a href="#offers" data-cat="sale">العروض</a></nav>
+  <input id="q" type="search" placeholder="ابحثي عن منتج…" aria-label="بحث">
+  <button id="acct" class="ic" aria-label="الحساب">👤</button>
+  <button id="cartBtn" class="ic" aria-label="السلة">🛍<b id="cnt">0</b></button>
+</header>
+<main>
+<section class="hero"><div class="ht"><span class="eyebrow">مجموعة الموسم · وصل حديثًا</span><h1 id="heroT">أناقة <em>هادئة</em> تليق بكِ</h1><p id="heroP">قطع مختارة بعناية، بجودة تدوم وتفاصيل تُرى.</p><div class="cta"><a class="btn" href="#shop">استكشفي المنتجات</a><a class="btn ghost" href="#offers">العروض</a></div><ul class="trust"><li>🚚 توصيل لباب البيت</li><li>💳 الدفع عند الاستلام</li><li>✨ جودة مختارة</li></ul></div><div class="hv"><div class="heroimg" id="heroimg" role="img" aria-label="صورة المتجر"></div><div class="fl f1">جديد<b>مجموعة الموسم</b></div><div class="fl f2">📍 توصيل<b>لباب بيتك</b></div></div></section>
+<div class="mq" aria-hidden="true"><div><span>توصيل سريع</span><span>جودة مختارة</span><span>أناقة تدوم</span><span>دفع عند الاستلام</span><span>توصيل سريع</span><span>جودة مختارة</span><span>أناقة تدوم</span><span>دفع عند الاستلام</span></div></div>
+<section class="wrap" id="catcards"></section>
+<section id="banners"></section>
+<div id="home"></div>
+<section class="wrap" id="shop">
+  <div class="bar"><div id="chips" class="chips"></div>
+    <select id="sort" aria-label="الفرز"><option value="new">الأحدث</option><option value="pl">السعر: الأقل</option><option value="ph">السعر: الأعلى</option><option value="disc">الأكبر خصمًا</option></select>
+    <label class="chk"><input type="checkbox" id="onlySale"> تخفيضات فقط</label></div>
+  <div id="grid" class="grid" aria-live="polite"></div>
+</section>
+</main>
+<section class="panel" id="adminView" hidden><h1 style="font-size:28px">لوحة الإدارة</h1>
+<div id="login" class="card"><label>البريد الإلكتروني<input id="em" type="email" autocomplete="username"></label><label>كلمة المرور<input id="pw" type="password" autocomplete="current-password"></label><p id="le" class="err"></p><button class="btn" id="lb">دخول</button></div>
+<div id="app" hidden>
+<div class="card stats" id="stats"></div>
+<div class="card"><h2>منتج جديد / تعديل</h2><form id="f"><div class="g2">
+<label>الاسم<input name="name" required maxlength="120"></label><label>التصنيف<select name="cat"><option value="women">الملابس النسائية</option><option value="other">منتجات أخرى</option></select></label>
+<label>السعر<input name="price" type="number" min="0" step="0.01" required></label><label>السعر السابق (اختياري)<input name="oldPrice" type="number" min="0" step="0.01"></label>
+<label>المخزون<input name="stock" type="number" min="0" required></label><label>علامة (جديد/مميز/عرض خاص)<input name="tag"></label>
+<label>المقاسات (مفصولة بفاصلة)<input name="sizes"></label><label>الألوان (مفصولة بفاصلة)<input name="colors"></label></div>
+<label>الوصف<textarea name="desc" rows="3"></textarea></label><label>الصور (الأولى هي الرئيسية)<input name="files" type="file" accept="image/*" multiple></label><div id="prev" class="gal"></div>
+<label class="chk"><input type="checkbox" name="published" checked> منشور</label><label class="chk"><input type="checkbox" name="featured"> مميز</label>
+<p id="fe" class="err"></p><button class="btn" id="sb">حفظ المنتج</button> <button class="btn ghost" type="reset" id="rs">جديد</button></form></div>
+<div class="card"><h2>المنتجات</h2><div id="plist"></div></div>
+<div class="card"><h2>الطلبات</h2><div id="olist"></div></div>
+<div class="card"><h2>العروض والبنرات</h2><form id="bf"><div class="g2"><label>العنوان<input name="title" required maxlength="80"></label><label>المكان<select name="place"><option value="home">الصفحة الرئيسية</option><option value="hero">واجهة الافتتاح</option></select></label><label>النص<input name="text" maxlength="160"></label><label>رابط الزر (https، اختياري)<input name="link" type="url"></label><label>نص الزر<input name="btn" maxlength="30"></label><label>ينتهي في<input name="end" type="date"></label></div><label>الصورة<input name="img" type="file" accept="image/*" required></label><p id="be" class="err"></p><button class="btn">إضافة العرض</button></form><div id="blist"></div></div>
+<div class="card"><h2>التصنيفات</h2><form id="cf" style="display:flex;gap:8px"><input name="name" placeholder="اسم تصنيف جديد" required maxlength="40"><button class="btn" style="margin:0">إضافة</button></form><div id="clist"></div></div>
+<button class="btn ghost" id="out">تسجيل الخروج</button></div></section>
+<footer><p><b>الأناقة</b> — أناقة هادئة، جودة تدوم</p><p><a href="#shop">المتجر</a><a href="#" id="myo">طلباتي</a><a href="#" id="privacyL">الخصوصية وشروط الطلب</a><a href="#admin">الإدارة</a></p><p class="hint">© الأناقة · جميع الحقوق محفوظة</p></footer>
+
+<dialog id="pd"></dialog><dialog id="mo"></dialog>
+<dialog id="cart"><form method="dialog" class="dh"><h2>سلة المشتريات</h2><button class="x" aria-label="إغلاق">✕</button></form><div id="cartBody"></div></dialog>
+<dialog id="co"><form method="dialog" class="dh"><h2>إتمام الطلب</h2><button class="x" aria-label="إغلاق">✕</button></form>
+<div id="coSum"></div>
+<label>رقم الهاتف<input id="ph" type="tel" inputmode="tel" placeholder="05xxxxxxxx" required></label>
+<label>عنوان التوصيل<textarea id="ad" rows="2" required></textarea></label>
+<label>ملاحظات<textarea id="nt" rows="2"></textarea></label>
+<p class="hint">سنستخدم موقعك مرة واحدة لتوصيل الطلب فقط، دون أي تتبع.</p>
+<button class="btn ghost" id="gps" type="button">📍 تحديد موقع التوصيل</button><p id="gpsS" class="hint"></p>
+<p id="coErr" class="err" role="alert"></p>
+<button class="btn" id="send" type="button">تأكيد الطلب</button></dialog>
+<dialog id="pv"><form method="dialog" class="dh"><h2>الخصوصية وشروط الطلب</h2><button class="x">✕</button></form>
+<p>نجمع رقم الهاتف والعنوان والموقع الجغرافي (مرة واحدة بموافقتك) لغرض تنفيذ الطلب وتوصيله فقط. لا نتتبع موقعك ولا نستخدم بياناتك لغير ذلك، ولا يطّلع عليها غير فريق المتجر. يمكنك طلب حذف بياناتك بالتواصل معنا.</p></dialog>
+<div id="toast" role="status"></div>
+<script>
+addEventListener("scroll",()=>document.querySelector(".hdr").classList.toggle("sc",scrollY>20),{passive:true});
+if(location.protocol==="file:"){const w=document.createElement("div");w.className="fw";w.innerHTML="⚠️ فتحتِ الملف بالنقر المزدوج، لذلك لا يعمل الاتصال بـ Firebase. هذه <b>معاينة للتصميم فقط</b>. شغّليه عبر Live Server أو الأمر <code>npx serve</code>.";document.body.prepend(w);
+const g=document.getElementById("grid");g.replaceChildren();
+[["فستان سهرة (عينة)",189,240,"عرض خاص"],["عباءة مطرزة (عينة)",320,0,"جديد"],["وشاح حرير (عينة)",79,99,""],["حقيبة جلد (عينة)",210,0,"مميز"],["بلوزة كتان (عينة)",120,150,""],["حذاء كلاسيكي (عينة)",260,0,""],["عطر فاخر (عينة)",150,0,"جديد"],["إكسسوار ذهبي (عينة)",65,80,""]].forEach(([n,p,o,t],i)=>{const a=document.createElement("article");a.className="pc";a.innerHTML='<div class="im" style="background:linear-gradient(150deg,hsl('+(i*37%360)+' 35% 86%),hsl('+(i*37+30)%360+' 30% 72%))">'+(t?'<span class="tag">'+t+'</span>':"")+'</div><div class="bd"><div>'+n+'</div><div class="pr">'+p+' ر.س'+(o?'<span class="old">'+o+' ر.س</span>':"")+'</div><button class="btn">اطلب الآن</button></div>';g.append(a)})}
+</script>
+<script type="module" src="app.js"></script>
+</body></html>
