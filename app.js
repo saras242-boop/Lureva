@@ -121,10 +121,9 @@ const ST={new:"جديد",confirming:"قيد التأكيد",preparing:"قيد ا
 let editing=null,products={};
 $("#lb").onclick=async()=>{$("#le").textContent="";try{await signInWithEmailAndPassword(auth,$("#em").value.trim(),$("#pw").value)}catch{$("#le").textContent="بيانات الدخول غير صحيحة."}};
 $("#out").onclick=()=>signOut(auth);
-onAuthStateChanged(auth,async u=>{
-  const ok=u&&(await u.getIdTokenResult(true)).claims.admin===true;
-  if(u&&!ok){$("#le").textContent="هذا الحساب غير مخوّل للإدارة.";await signOut(auth)}
-  $("#login").hidden=!!ok;$("#app").hidden=!ok;if(ok)refresh()});
+onAuthStateChanged(auth,u=>{const ok=!!u&&u.uid===ADMIN_UID;$("#login").hidden=ok;$("#app").hidden=!ok;$("#lo").hidden=!(u&&!ok);
+  if(u&&!ok&&location.hash==="#admin")$("#le").textContent="مسجّل الدخول الآن كـ: "+(u.email||"حساب Google")+" — UID: "+u.uid+" ← غير مخوّل. اضغطي تسجيل الخروج ثم ادخلي بحساب الإدارة.";if(ok)refresh()});
+$("#lo").onclick=()=>signOut(auth);
 async function refresh(){refresh2();
   products=(await get(ref(db,"products"))).val()||{};const orders=(await get(ref(db,"orders"))).val()||{};
   const P=Object.entries(products),O=Object.entries(orders).sort((a,b)=>b[1].createdAt-a[1].createdAt);
